@@ -3,8 +3,88 @@
 <head>
 	<meta charset="UTF-8">
 	<title>drag and drop</title>
+	<style>
+		#draglist,#trash{
+			width: 300px;
+			padding: 20px;
+			margin: 0 auto;
+			text-align: center;
+		}
+		
+		.list{
+			height: 50px;
+			margin-bottom: 10px;
+			text-align: center;
+			line-height: 50px;
+			border: 2px dashed #666;
+			background-color: #ddd;
+			cursor: move;
+		}
+		.over{
+
+		}
+		.start{
+			border: 2px dashed #eee;
+		}
+	</style>
 </head>
 <body>
-	
+	<div id="draglist">
+		<div class="list" draggable="true">list1</div>
+		<div class="list" draggable="true">list2</div>
+		<div class="list" draggable="true">list3</div>
+		<div class="list" draggable="true">list4</div>
+		<div class="list" draggable="true">list5</div>
+	</div>
+	<div id="trash">
+		<img class="trashImg" src="trash.jpg" alt="垃圾桶" width="100" height="150">
+	</div>
 </body>
+<script>
+	var lists = document.querySelectorAll('.list'),
+		trash = document.querySelector('#trash'),
+		moveEle = null;
+	function handleDragStart (e) {
+			// Target (this) element is the source node.
+			this.classList.add('start');
+			moveEle = this;
+		}
+		function handleDragEnter (e) {
+			this.classList.add('over');
+		}
+		function handleDragOver (e) {  
+			if (e.preventDefault) {
+				e.preventDefault();
+			}
+			//e.dataTransfer.dropEffect = 'move'; //
+
+			return false;
+		}
+		function handleDragLeave (e) {
+			this.classList.remove('over');
+			//e.target.classList.remove('over');
+		}
+		function handleDrop (e) {
+			// this / e.target is current target element.
+			if (e.preventDefault) {
+				e.preventDefault();
+			}
+			moveEle.parentNode.removeChild(moveEle);
+			return false;
+		}
+		function handleDragEnd (e) {
+			[].forEach.call(lists,function (list) {
+				list.classList.remove('start');			
+			});
+		}
+		[].forEach.call(lists,function (list) {
+			list.addEventListener('dragstart',handleDragStart,false);
+			list.addEventListener('dragend', handleDragEnd, false);
+		});
+		trash.addEventListener('dragenter', handleDragEnter, false);
+	    trash.addEventListener('dragover', handleDragOver, false);
+	    trash.addEventListener('dragleave', handleDragLeave, false);
+	    trash.addEventListener('drop', handleDrop, false);
+		
+</script>
 </html>
